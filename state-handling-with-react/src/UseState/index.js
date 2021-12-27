@@ -3,16 +3,31 @@ import React from 'react'
 const SECURITY_CODE = 'paradigma';
 
 function UseState({ name }) {
-    const [value, setValue] = React.useState('');
-    const [error, setError] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
+
+    const [state, setState] = React.useState(
+        {
+            value: '',
+            error: false,
+            loading: false, 
+        }
+    );
+
+    // const [value, setValue] = React.useState('');
+    // const [error, setError] = React.useState(false);
+    // const [loading, setLoading] = React.useState(false);
 
     const onClick = (event) => {
-        setLoading(true);
+        setState({
+            ...state,
+            loading: true
+        });
     }
 
     const onChange = (event) => {
-        setValue(event.target.value)
+        setState({
+            ...state,
+            value: event.target.value
+        });
     }
 
     const commentEnterSubmit = (event) => {
@@ -24,17 +39,23 @@ function UseState({ name }) {
     React.useEffect(() => {
         // console.log("Starting the effect");
 
-        if (!!loading) {                
+        if (!!state.loading) {                
             console.log("Doing the validation");
             setTimeout(() => {
 
-                if(value === SECURITY_CODE){
-                    setLoading(false);
-                    setError(false)
+                if(state.value === SECURITY_CODE){
+                    setState({
+                        ...state,
+                        loading: false,
+                        error: false
+                    });
                 }
                 else{
-                    setLoading(false);
-                    setError(true);
+                    setState({
+                        ...state,
+                        loading: false,
+                        error: true
+                    });
                 }
 
                 console.log("The validation was completed");
@@ -42,7 +63,7 @@ function UseState({ name }) {
         }
 
         // console.log("Finishing the effect");
-    }, [loading]);
+    }, [state.loading]);
 
     return (
         <div>
@@ -50,16 +71,16 @@ function UseState({ name }) {
 
             <p>Please enter the security code</p>
 
-            {(error && !loading) && (
+            {(state.error && !state.loading) && (
                 <p>Error: Security code is incorrect</p>
             )}
-            {loading && (
+            {state.loading && (
                 <p>Loading...</p>
             )}
 
             <input 
                 placeholder="Security Code"
-                value={value}
+                value={state.value}
                 onChange={onChange}
                 onKeyPress={commentEnterSubmit}
             />
