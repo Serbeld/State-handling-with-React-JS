@@ -1,11 +1,13 @@
 import React from 'react'
 import { Loading } from '../Loading'
 
+const SECURITY_CODE = 'paradigma';
 class ClassState extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            value: '',
             error: false,
             loading: false
         };
@@ -22,16 +24,23 @@ class ClassState extends React.Component {
     componentDidUpdate(){
 
         if (!!this.state.loading) {
+            console.log("Doing the validation");
             setTimeout(() => {
-                console.log("Doing the validation");
 
                 this.setState({loading: false});
 
-                console.log("Finishing the validation");
-            }, 3000);
+                if(SECURITY_CODE === this.state.value){
+                    this.setState({ error: false, loading: false })
+                }
+                else{
+                    this.setState({ error: true, loading: false })
+                }
+
+                console.log("The validation was completed");
+            }, 2000);
         }
 
-        console.log("Updating...")
+        // console.log("Updating...")
     }
 
     render() {
@@ -42,7 +51,7 @@ class ClassState extends React.Component {
                 <p>Please enter the security code</p>
 
                 {
-                    this.state.error && (
+                    (this.state.error && !this.state.loading) && (
                         <p>Error: Security code is incorrect</p>
                     )
                 }
@@ -51,7 +60,18 @@ class ClassState extends React.Component {
                         < Loading />
                     )
                 }
-                <input placeholder="Security Code" />
+                <input 
+                    placeholder="Security Code" 
+                    value={this.state.value}
+                    onChange={(event) => {
+                        this.setState({value: event.target.value })
+                    }}
+                    onKeyPress={(event) => {
+                        if (event.key === "Enter" && event.shiftKey === false) {
+                            this.setState({ loading: true})
+                        }
+                    }}
+                />
                 <button
                     onClick={() => { this.setState({ loading: true }) }}
                 >Check</button>

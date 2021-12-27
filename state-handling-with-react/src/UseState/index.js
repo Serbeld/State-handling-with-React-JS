@@ -1,23 +1,47 @@
 import React from 'react'
 
+const SECURITY_CODE = 'paradigma';
+
 function UseState({ name }) {
+    const [value, setValue] = React.useState('');
     const [error, setError] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
 
+    const onClick = (event) => {
+        setLoading(true);
+    }
+
+    const onChange = (event) => {
+        setValue(event.target.value)
+    }
+
+    const commentEnterSubmit = (event) => {
+        if (event.key === "Enter" && event.shiftKey === false) {
+            return onClick(event);
+        }
+    }
+
     React.useEffect(() => {
-        console.log("Starting the effect");
+        // console.log("Starting the effect");
 
-        if (!!loading) {
+        if (!!loading) {                
+            console.log("Doing the validation");
             setTimeout(() => {
-                console.log("Doing the validation");
 
-                setLoading(false);
+                if(value === SECURITY_CODE){
+                    setLoading(false);
+                    setError(false)
+                }
+                else{
+                    setLoading(false);
+                    setError(true);
+                }
 
-                console.log("Finishing the validation");
-            }, 3000);
+                console.log("The validation was completed");
+            }, 2000);
         }
 
-        console.log("Finishing the effect");
+        // console.log("Finishing the effect");
     }, [loading]);
 
     return (
@@ -26,17 +50,22 @@ function UseState({ name }) {
 
             <p>Please enter the security code</p>
 
-            {error && (
+            {(error && !loading) && (
                 <p>Error: Security code is incorrect</p>
             )}
             {loading && (
                 <p>Loading...</p>
             )}
 
-            <input placeholder="Security Code" />
+            <input 
+                placeholder="Security Code"
+                value={value}
+                onChange={onChange}
+                onKeyPress={commentEnterSubmit}
+            />
 
             <button
-                onClick={() => setLoading(true)}
+                onClick={onClick}
             >Check</button>
         </div>
     );
