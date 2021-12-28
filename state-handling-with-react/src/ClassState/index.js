@@ -52,7 +52,7 @@ class ClassState extends React.Component {
 
                 {
                     (this.state.error && !this.state.loading) && (
-                        <p>Error: Security code is incorrect</p>
+                        <p className='error'>Error: Security code is incorrect</p>
                     )
                 }
                 {
@@ -73,6 +73,7 @@ class ClassState extends React.Component {
                     }}
                 />
                 <button
+                    className={`${this.state.value === SECURITY_CODE && !this.state.error ? "check" : ""}`}
                     onClick={() => { this.setState({ loading: true }) }}
                 >Check</button>
             </div>
