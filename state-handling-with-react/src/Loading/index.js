@@ -2,15 +2,15 @@ import React from 'react'
 
 class Loading extends React.Component {
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         console.log("componentWillUnmount")
     }
 
     render() {
         return (
-            <div>
-                <p>Loading...</p>
-            </div>
+            <React.Fragment>
+                <p className='loading'>Loading...</p>
+            </React.Fragment>
         );
     }
 }
