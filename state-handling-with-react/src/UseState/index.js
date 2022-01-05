@@ -14,7 +14,7 @@ function UseState({ name }) {
 
     const [state, setState] = React.useState(initialValue);
 
-    React.useEffect(() => {
+    const loadJsonLocalStorage = () => {
         try {
             const localStorageItem = localStorage.getItem(itemName);
             let parsedItem;
@@ -29,11 +29,12 @@ function UseState({ name }) {
                     parsedItem = initialValue;
                 }
             }
-            setState(parsedItem)
+            console.log(parsedItem)
+            // setState(parsedItem)
         } catch (error) {
             console.warn(error.message)
         }
-    }, []);
+    }
 
     const onClick = () => {
         setState({
@@ -78,13 +79,16 @@ function UseState({ name }) {
                     });
                 }
 
-                localStorage.setItem(itemName, JSON.stringify(state));
+                loadJsonLocalStorage();
 
                 console.log("The validation was completed");
             }, 1000);
         }
 
         // console.log("Finishing the effect");
+
+        localStorage.setItem(itemName, JSON.stringify(state));
+
     }, [state.loading]);
 
     if (!state.deleted && !state.confirmed) {
@@ -125,6 +129,7 @@ function UseState({ name }) {
                         onClick={() => {
                             setState({
                                 ...state,
+                                loading: true,
                                 deleted: true
                             });
                         }}
@@ -133,6 +138,7 @@ function UseState({ name }) {
                         onClick={() => {
                             setState({
                                 ...state,
+                                loading: true,
                                 confirmed: false,
                                 value: ''
                             });
@@ -152,6 +158,7 @@ function UseState({ name }) {
                         onClick={() => {
                             setState({
                                 ...state,
+                                loading: true,
                                 deleted: false,
                                 confirmed: false,
                                 value: ''
