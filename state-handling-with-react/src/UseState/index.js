@@ -36,14 +36,14 @@ function UseState({ name }) {
         }
     }
 
-    const onClick = () => {
+    const onCheck = () => {
         setState({
             ...state,
             loading: true
         });
     }
 
-    const onChange = (event) => {
+    const onWrite = (event) => {
         setState({
             ...state,
             value: event.target.value
@@ -52,8 +52,43 @@ function UseState({ name }) {
 
     const commentEnterSubmit = (event) => {
         if (event.key === "Enter" && event.shiftKey === false) {
-            return onClick();
+            return onCheck();
         }
+    }
+
+    const onConfirm = () => {
+        setState({
+            ...state,
+            loading: false,
+            error: false,
+            confirmed: true,
+        });
+    }
+
+    const onError = () => {
+        setState({
+            ...state,
+            loading: false,
+            error: true
+        });
+    }
+
+    const onDelete = () => {
+        setState({
+            ...state,
+            loading: true,
+            deleted: true
+        });
+    }
+
+    const onReset = () => {
+        setState({
+            ...state,
+            loading: true,
+            deleted: false,
+            confirmed: false,
+            value: ''
+        });
     }
 
     React.useEffect(() => {
@@ -64,19 +99,10 @@ function UseState({ name }) {
             setTimeout(() => {
 
                 if (state.value === SECURITY_CODE) {
-                    setState({
-                        ...state,
-                        loading: false,
-                        error: false,
-                        confirmed: true,
-                    });
+                    onConfirm();
                 }
                 else {
-                    setState({
-                        ...state,
-                        loading: false,
-                        error: true
-                    });
+                    onError();
                 }
 
                 loadJsonLocalStorage();
@@ -108,13 +134,13 @@ function UseState({ name }) {
                 <input
                     placeholder="Security Code"
                     value={state.value}
-                    onChange={onChange}
+                    onChange={onWrite}
                     onKeyPress={commentEnterSubmit}
                 />
 
                 <button
                     className={`${state.value === SECURITY_CODE && !state.error ? "check" : ""}`}
-                    onClick={onClick}
+                    onClick={onCheck}
                 >Check</button>
             </div>
         );
@@ -126,23 +152,10 @@ function UseState({ name }) {
                     <p>Are you agree to delete this state?</p>
                     <button
                         className='background-red'
-                        onClick={() => {
-                            setState({
-                                ...state,
-                                loading: true,
-                                deleted: true
-                            });
-                        }}
+                        onClick={onDelete}
                     >Delete</button>
                     <button
-                        onClick={() => {
-                            setState({
-                                ...state,
-                                loading: true,
-                                confirmed: false,
-                                value: ''
-                            });
-                        }}
+                        onClick={onReset}
                     >Cancel</button>
                 </div>
             </React.Fragment>
@@ -155,15 +168,7 @@ function UseState({ name }) {
                     <p>The react state was deleted</p>
                     <button
                         className='background-red'
-                        onClick={() => {
-                            setState({
-                                ...state,
-                                loading: true,
-                                deleted: false,
-                                confirmed: false,
-                                value: ''
-                            });
-                        }}
+                        onClick={onReset}
                     >Return the react state again</button>
                 </div>
             </React.Fragment>
